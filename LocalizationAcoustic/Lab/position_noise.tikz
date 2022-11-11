@@ -1,0 +1,40 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=.8\textwidth,
+height=.8\textwidth,
+scale only axis,
+every outer x axis line/.append style={black},
+every x tick label/.append style={font=\color{black}},
+xmin=0,
+xmax=6,
+xlabel={$x$},
+every outer y axis line/.append style={black},
+every y tick label/.append style={font=\color{black}},
+ymin=0,
+ymax=6,
+ylabel={$y$},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot[only marks,mark=o,mark options={},mark size=1.5000pt,color=black] plot table[row sep=crcr]{%
+1.97418278314331	3.01499259530012\\
+};
+\addplot[only marks,mark=x,mark options={},mark size=1.5000pt,color=red] plot table[row sep=crcr]{%
+2	3\\
+};
+\addplot[only marks,mark=o,mark options={},mark size=1.5000pt,color=blue] plot table[row sep=crcr]{%
+2.69	0.19\\
+5.19	3.21\\
+2.7	5.27\\
+0.37	3.54\\
+};
+\end{axis}
+\end{tikzpicture}%

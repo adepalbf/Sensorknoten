@@ -1,0 +1,166 @@
+\documentclass{tudexercise}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{mcode}
+
+\usepackage{trfsigns}
+\usepackage[per-mode=symbol,binary-units=true, redefsymbols=false]{siunitx}
+
+\title{LAS Report}
+\author{Asma \bsc{DAKHLI}, Valentin Mees}
+\date{12.11.2015}
+
+\newcommand{\FDom}{e^{j\omega}}
+\newcommand{\nenner}{\sqrt{\tan^2{\hat{\theta}_k}+1}}
+
+\begin{document}
+\maketitle
+
+\section{Preparation}
+\subsection{Provide a formula for the maximum possible time-delay between two microphones spaced by $d$. What is $\Delta n_\mathrm{max}$ for $d = \SI{0.175}{\meter}$ and $f_s = \SI{8}{\kilo\hertz}$?}
+
+$\Delta n_\mathrm{max} = \mathrm{round}\left(f_s \cdot \frac{d}{v}\right) = 4$ 
+
+\subsection{Which problem occurs generally when the time-delay is calculated in the time domain for sampled signals? How can it be fixed?}
+
+The time delay is not necessarily an integer multiple of the sampling interval. Interpolation of the estimated cross-correlation function may lead to better results when searching for the maximum.
+
+\subsection{For now assume $\Delta t/T$ to be an integer. Derive the result of (6).}
+
+The prime $'$ denotes the complex conjugate.
+
+\begin{align*}
+\intertext{Goal:}
+P_{X_1X_2}(\FDom) &= \sum_{\kappa=-\infty}^\infty r_{X_1X_2}(\kappa) e^{-j\omega \kappa}  = gP_{SS}(\FDom)e^{j\omega\Delta t/T}\\
+\intertext{Knowns:}
+X_1(n) &= S(n) + N_1(n) \Laplace X_1(\FDom) = S(\FDom) +N_1(\FDom)\\
+X_2(n) &= gS(nT-\Delta t) + N_2(n) \Laplace X_2(\FDom) = gS(\FDom)e^{-j\omega \Delta t/T} + N_2(\FDom)\\
+\intertext{The left equation is the identity under Fourier transform between CPSD and cross-SOMF}
+P_{X_1X_2}(\FDom) &= \sum_{\kappa=-\infty}^\infty r_{X_1X_2}(\kappa) e^{-j\omega \kappa}\\
+\intertext{The outer equation is to show}
+P_{X_1X_2}(\FDom) &= gP_{SS}(\FDom)e^{j\omega\Delta t/T}\\
+P_{X_1X_2}(\FDom) &= \mathrm{E}\{X'_1(\FDom)X_2(\FDom)\}\\
+&= \mathrm{E}\{(S'(\FDom) +N'_1(\FDom))(gS(\FDom)e^{-j\omega \Delta t/T} + N_2(\FDom))\}\\
+&= \mathrm{E}\{gS'(\FDom)S(\FDom)e^{-j\omega \Delta t/T} +N'_1(\FDom)gS(\FDom)e^{-j\omega \Delta t/T} + N'_1(\FDom)N_2(\FDom) + S'(\FDom)N_2(\FDom)\}\\
+&= g\mathrm{E}\{S'(\FDom)S(\FDom)\}e^{-j\omega \Delta t/T}\\
+&= gP_{SS}(\FDom)e^{-j\omega \Delta t/T}\\
+\end{align*}
+\subsection{How can the cross-SOMF (cross-correlation function) be estimated using the cross-periodogram?}
+
+The cross-periodogram is an estimator for the cross-PSD, and therefore the IDFT of the cross-periodogram is an estimator for the cross-SOMF due to the identity
+\[P_{X_1X_2}(\FDom) = \sum_{\kappa=-\infty}^\infty r_{X_1X_2}(\kappa) e^{-j\omega \kappa}\]
+\subsection{Use Equation (11) to write $\boldsymbol{d}^*$ using $\boldsymbol{\hat{A}}$, $\boldsymbol{\hat{b}}$ and $\boldsymbol{\hat{p}}^*$, then derive the least squares estimate which is given in Equation (12).}
+
+The prime $'$ denotes the complex conjugate, the $^H$ the complex conjugate transpose. The $^H$ reduces to $^T$ for real valued $\boldsymbol{\hat{A}}$.
+\begin{align*}
+d^*_k &= \left|\frac{\tan{\hat{\theta}_k}}{\nenner} \hat{x}^* - \frac{1}{\nenner} \hat{y}^* + \frac{1}{\nenner} \hat{b}_k\right|\\
+\Rightarrow \boldsymbol{d}^* &= \left|\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^* + \boldsymbol{\hat{b}}\right|\\
+{\boldsymbol{d}^*}^2 &= (\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^* + \boldsymbol{\hat{b}})^H (\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^* + \boldsymbol{\hat{b}})\\
+&= {\boldsymbol{\hat{p}}^*}^H\boldsymbol{\hat{A}}^H\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^* + \boldsymbol{\hat{b}}^H\boldsymbol{\hat{b}} + {\boldsymbol{\hat{p}}^*}^H\boldsymbol{\hat{A}}^H\boldsymbol{\hat{b}} + \boldsymbol{\hat{b}}^H\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^*
+\intertext{Differentiating ${\boldsymbol{d}^*}^2$ w.r.t. $\boldsymbol{\hat{p}}^*$:}
+\frac{\partial {\boldsymbol{d}^*}^2}{\partial \boldsymbol{\hat{p}}^*} &= \frac{\partial {\boldsymbol{\hat{p}}^*}^H\boldsymbol{\hat{A}}^H\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^* + \boldsymbol{\hat{b}}^H\boldsymbol{\hat{b}} + {\boldsymbol{\hat{p}}^*}^H\boldsymbol{\hat{A}}^H\boldsymbol{\hat{b}} + \boldsymbol{\hat{b}}^H\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^*}{\partial \boldsymbol{\hat{p}}^*}\\
+&= 2\boldsymbol{\hat{A}}^H\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^* + 2\boldsymbol{\hat{A}}^H\boldsymbol{\hat{b}}
+\intertext{Setting the derivative to zero for finding the extrema yields:}
+\boldsymbol{\hat{A}}^H\boldsymbol{\hat{A}}\boldsymbol{\hat{p}}^* &= - \boldsymbol{\hat{A}}^H\boldsymbol{\hat{b}}\\
+\intertext{Multiplying with  from the left results in the LSE solution for non-singular $\boldsymbol{\hat{A}}^H\boldsymbol{\hat{A}}$:}
+\boldsymbol{\hat{p}}^* &= -(\boldsymbol{\hat{A}}^H\boldsymbol{\hat{A}})^{-1}\boldsymbol{\hat{A}}^H\boldsymbol{\hat{b}}
+\intertext{The solution is a minimum, if the Hesse matrix is positive definite. As $\boldsymbol{\hat{A}}^H\boldsymbol{\hat{A}}$ is positive semi-definite by structure and non-singular, the Hesse matrix is positive definite:}
+\frac{\partial^2 {\boldsymbol{d}^*}^2}{\partial {\boldsymbol{\hat{p}}^*}^2} &= 2 \boldsymbol{\hat{A}}^H\boldsymbol{\hat{A}}
+\end{align*}
+
+\clearpage
+\section{Experiment}
+\subsection{Setup and Data Acquisition}
+\subsubsection{Time-Delay Estimation Using the Cross-Correlation Function}
+
+\paragraph{Use \texttt{nktp\_sim} to simulate a stationary source, and extract the signal of the first and second microphones X1=x(1,:) and X2=x(2,:). Use the signal length of 1024 and sampling frequency of 48.000, and a white Gaussian signal as source signal.}
+
+\lstinputlisting{CC_script.m}
+\paragraph{Calculate $\Delta n_\mathrm{max}$.}
+$\Delta n_\mathrm{max} = 24$
+\paragraph{Write a MATLAB function \texttt{xycorr} which calculates the cross-correlation function between two signals $X$ and $Y$ for $n \in {-\Delta n_\mathrm{max}, -\Delta n_\mathrm{max} + 1, \dots, \Delta n_\mathrm{max} }$, using the cross-periodogram. Plot the output as a function of $n$.}
+
+\paragraph{Use the MATLAB function \texttt{max} to find the maximum and determine $\Delta n$. Also estimate $\theta$ using the command \texttt{asin}.}
+\lstinputlisting{xycorr.m}
+
+\paragraph{Repeat the above steps using real data. Compare the cross-correlation function of the real speech signal and white noise.}
+
+The peak of the cross-correlation of white noise is narrower and the second-highest value is much closer to the peak value in the real-signal case.
+
+\begin{figure}[!ht]
+\begin{subfigure}[b]{.5\linewidth}
+\centering\input{noise.tikz}
+\caption{CC of white Gaussian}\label{fig:1a}
+\end{subfigure}%
+\begin{subfigure}[b]{.5\linewidth}
+\centering\input{beepbeep.tikz}
+\caption{CC of real signal}\label{fig:1b}
+\end{subfigure}
+\caption{Cross-correlation}\label{fig:1}
+\end{figure}
+
+\clearpage
+\subsubsection{Improvements by Using the GCC}
+\paragraph{Write a function genxcorr which calculates the GCC of two input vectors.}
+\lstinputlisting{genxcorr.m}
+
+\paragraph{Compare xycorr and genxcorr using real speech data, i.e. plot the output of the two functions and comment on the results.}
+
+The peak shows at the same position, but is much narrower for the GCC compared to the normal cross-correlation. The output of the GCC is similar to the cross-correlation of white noise signals.
+
+\begin{figure}[!ht]
+\begin{subfigure}[b]{.5\linewidth}
+\centering\input{beepbeep.tikz}
+\caption{CC of real signal}\label{fig:2a}
+\end{subfigure}
+\begin{subfigure}[b]{.5\linewidth}
+\centering\input{beepbeep_GCC.tikz}
+\caption{GCC of real signal}\label{fig:2b}
+\end{subfigure}
+\caption{Generalized cross-correlation}\label{fig:2}
+\end{figure}
+
+\subsubsection{Source Localization}
+\paragraph{1. Use \texttt{nktp\_sim} to simulate a stationary sound source as before.}
+\paragraph{2. Extract the output signal of the first pair and compute the delay and then the AOA estimate $\hat{\theta}_1$.}
+\paragraph{3. Repeat Step 2 for the remaining pairs and compute $\hat{\theta}_2$, $\hat{\theta}_3$ and $\hat{\theta}_4$.}
+\paragraph{4. Use Equation (12) to estimate the location of the source. Note that the AOA estimates should first be converted to the global coordinate system.}
+\lstinputlisting{fixed_source_position.m}
+
+\paragraph{Plot the true and the estimated source location and the position of the four pairs.}
+\paragraph{Repeat the above steps using the real data.}
+\begin{figure}[!ht]
+\begin{subfigure}[b]{.5\linewidth}
+\centering\input{position_noise.tikz}
+\caption{White Gaussian signal}\label{fig:3a}
+\end{subfigure}
+\begin{subfigure}[b]{.5\linewidth}
+\centering\input{position_sim.tikz}
+\caption{Real signal}\label{fig:3b}
+\end{subfigure}
+\caption{Position estimate of simulated audio sources}\label{fig:3}
+\end{figure}
+
+
+\subsubsection{Extensions for a Moving Source}
+\paragraph{1. Use the function \texttt{nktp\_rec} to acquire the output of the microphones for a short time, i.e., small frame. Thus, the source can be considered stationary during the acquisition time.}
+\paragraph{2. Use the functions that you wrote in the previous section to estimate the location of the source.}
+\paragraph{3. Plot the estimated source location and the position of the four pairs.}
+\paragraph{4. Repeat Steps 1, 2 and 3, and test the localization for at least 10 seconds.}
+
+The recorded signals were too noisy for reliable estimates.
+
+\lstinputlisting{moving_source_position.m}
+
+\paragraph{The slow variation of the spatial parameters can be exploited by averaging consecutive cross-periodograms, as in Equation (8). Extend your function genxcorr with two input parameters: the last cross-periodogram and the forgetting factor $\alpha$. Use this function and repeat the above tests. Compare your results when using, e.g. $\alpha = 0.5$.}
+
+\lstinputlisting{genxcorr_av.m}
+\end{document}

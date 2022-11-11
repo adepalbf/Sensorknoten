@@ -1,0 +1,144 @@
+{
+	"name": "sensor_node_acoustic_map",
+	"description": "Sensor node for acoustic mapping",
+	"properties": {      
+        "owner": "LBF",
+        "project": "I2Panema"
+	},
+	"Locations": [
+		{
+			"name": "Location",
+			"description": "The location where the sensor node is installed",
+			"encodingType": "application/vnd.geo+json",
+			"location": {
+				"type": "Point",
+				"coordinates": [8.4259727, 49.015308]
+			}
+		},
+		{
+			"name": "Trolley",
+			"description": "The current trolley position",
+			"encodingType": "application/vnd.geo+json",
+			"location": {
+				"type": "Point",
+				"coordinates": [8.4259727, 49.015308]
+			}
+		}
+	],
+	"Datastreams": [
+		{
+			"name": "Reference microphone",
+			"description": "The sound pressure level at trolley position",
+			"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+			"unitOfMeasurement": {
+                "name": "decibel",
+                "symbol": "dB",
+                "definition": "ucum:dB(A)"
+            },
+			"Sensor": {
+				"name": "SPH0645LM4H/Microphone",
+				"description": "MEMS Microphone of ANC",
+				"encodingType": "application/pdf",
+				"metadata": "https://cdn-shop.adafruit.com/product-files/3421/i2S%20Datasheet.PDF"
+			},
+			"ObservedProperty": {
+                "name": "background noise level",
+                "definition": "https://www.iso.org/obp/ui#iso:std:iso:3740:ed-3:v1:en",
+                "description": "The sound pressure level of background noise."
+            },
+			"Observations": [
+				{
+					"phenomenonTime": "2019-03-14T10:00:00Z",
+					"result": 21.0
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:01:00Z",
+					"result": 21.1
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:02:00Z",
+					"result": 19.0
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:03:00Z",
+					"result": 19.1
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:04:00Z",
+					"result": 19.2
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:05:00Z",
+					"result": 20.0
+				}
+			]
+		}
+	],
+	"MultiDatastreams": [
+		{
+			"name": "Reference microphone",
+			"description": "The sound pressure level at trolley position",
+			"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+			"multiObservationDataTypes": [
+				"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+				"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+			],
+			"unitOfMeasurements": [
+                {
+                    "name": "single event time-integrated sound pressure level",
+                    "symbol": "dB",
+                    "definition": "ucum:dB(A)"
+                },
+                {
+                    "name": "single event duration",
+                    "symbol": "s",
+                    "definition": "ucum:s"
+                }
+            ],
+			"Sensor": {
+				"name": "SPH0645LM4H/Microphone",
+				"description": "MEMS Microphone of ANC",
+				"encodingType": "application/pdf",
+				"metadata": "https://cdn-shop.adafruit.com/product-files/3421/i2S%20Datasheet.PDF"
+			},
+			"ObservedProperties": [
+				{
+                    "name": "single event time-integrated sound pressure level",
+                    "definition": "https://www.iso.org/obp/ui#iso:std:iso:3740:ed-3:v1:en",
+                    "description": "The sound pressure level of an isolated event (burst of sound or transient sound)."
+				},
+				{
+                    "name": "single event duration",
+                    "definition": "https://www.iso.org/obp/ui#iso:std:iso:3740:ed-3:v1:en",
+                    "description": "The duration of an isolated event (burst of sound or transient sound)."
+				}
+			],
+			"Observations": [
+				{
+					"phenomenonTime": "2019-03-14T10:00:00Z",
+					"result": [5.1, 40]
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:01:00Z",
+					"result": [5.3, 44]
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:02:00Z",
+					"result": [5.2, 49]
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:03:00Z",
+					"result": [4.7, 41]
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:04:00Z",
+					"result": [4.1, 42]
+				},
+				{
+					"phenomenonTime": "2019-03-14T10:05:00Z",
+					"result": [4.6, 46]
+				}
+			]
+		}
+	]
+}
